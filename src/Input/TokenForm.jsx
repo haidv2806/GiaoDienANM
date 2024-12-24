@@ -1,10 +1,8 @@
 import React, { useState, useEffect} from "react";
 import axios from "axios";
 
-export default function TokenForm() {
+export default function TokenForm(props) {
   const [token, setToken] = useState("");
-  const [message, setMessage] = useState("");
-  const [userData, setUserData] = useState({ name: "", email: "" });
 
   const handleSubmit = async () => {
     try {
@@ -16,19 +14,18 @@ export default function TokenForm() {
       });
   
       // Xử lý phản hồi từ server
-      setMessage(response.data.message); // Hiển thị message
-      setUserData({
-        name: response.data.user.user_name,
-        email: response.data.user.email,
-      }); // Hiển thị tên và email
+      props.setMessage(response.data.message); // Hiển thị message
+      props.setName(response.data.user.user_name)
+      props.setEmail(response.data.user.email)
     } catch (err) {
       // Xử lý lỗi từ server
       if (err.response) {
-        setMessage(err.response.data.message || "Xác thực không thành công.");
+        props.setMessage(err.response.data.message || "Xác thực không thành công.");
       } else {
-        setMessage("Có lỗi xảy ra: " + err.message);
+        props.setMessage("Có lỗi xảy ra: " + err.message);
       }
-      setUserData({ name: "", email: "" }); // Xóa thông tin người dùng nếu lỗi
+      props.setName("")
+      props.setEmail("")
     }
   };
 
@@ -39,11 +36,9 @@ export default function TokenForm() {
     const email = queryParams.get("email");
     const message = "Đăng nhập google thành công"
     if (name && email) {
-      setMessage(message)
-      setUserData({
-        name: name,
-        email: email,
-      }); // Hiển thị tên và email
+      props.setMessage(message); // Hiển thị message
+      props.setName(name)
+      props.setEmail(email)
     }
   }, []); // Chỉ chạy một lần khi component được mount
 
@@ -75,13 +70,13 @@ export default function TokenForm() {
         {/* Hiển thị message */}
         <div className="mt-4">
           <h3 className="text-lg font-semibold">Message:</h3>
-          <p className="text-gray-700">{message || "Không có thông báo"}</p>
+          <p className="text-gray-700">{props.message || "Không có thông báo"}</p>
         </div>
         {/* Hiển thị tên và email */}
         <div className="mt-4">
           <h3 className="text-lg font-semibold">Thông tin người dùng:</h3>
-          <p className="text-gray-700">Tên: {userData.name || "Chưa xác định"}</p>
-          <p className="text-gray-700">Email: {userData.email || "Chưa xác định"}</p>
+          <p className="text-gray-700">Tên: {props.name || "Chưa xác định"}</p>
+          <p className="text-gray-700">Email: {props.email || "Chưa xác định"}</p>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-export default function LoginForm() {
+export default function LoginForm(props) {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -17,9 +17,10 @@ export default function LoginForm() {
 
     try {
       const response = await axios.post("http://localhost:3000/Auth/sign_in", formData);
-
-      // Phản hồi từ server
-      alert(`Đăng nhập thành công:\n${JSON.stringify(response.data, null, 2)}`); // JSON đẹp
+      
+      props.setName(response.data.user.user_name)
+      props.setEmail(response.data.user.email)
+      props.setMessage(response.data.message)
     } catch (error) {
       if (error.response) {
         // Lỗi từ server
