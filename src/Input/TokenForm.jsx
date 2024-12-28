@@ -34,8 +34,12 @@ export default function TokenForm(props) {
     const queryParams = new URLSearchParams(window.location.search);
     const name = queryParams.get("userName");
     const email = queryParams.get("email");
+    const token = queryParams.get("token");
     const message = "Đăng nhập google thành công"
-    if (name && email) {
+    if (name && email && token) {
+      document.cookie = `token=${token}; path=/; secure; samesite=strict; max-age=3600`;
+      console.log("Da luu");
+      
       props.setMessage(message); // Hiển thị message
       props.setName(name)
       props.setEmail(email)

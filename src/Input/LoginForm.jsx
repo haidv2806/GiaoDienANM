@@ -17,6 +17,9 @@ export default function LoginForm(props) {
 
     try {
       const response = await axios.post("http://localhost:3000/Auth/sign_in", formData);
+
+      const token = response.data.token.accessToken
+      document.cookie = `token=${token}; path=/; secure; samesite=strict; max-age=3600`;
       
       props.setName(response.data.user.user_name)
       props.setEmail(response.data.user.email)
@@ -34,7 +37,6 @@ export default function LoginForm(props) {
 
   const handleGoogleLogin = (e) => {
     e.preventDefault();
-    // Chuyển hướng người dùng đến server để bắt đầu quá trình Google OAuth
     window.location.href = "http://localhost:3000/Auth/google";
   };
 
